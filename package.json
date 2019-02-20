@@ -1,0 +1,25 @@
+{
+    "name": "uikit",
+    "version": "1.0.0",
+    "description": "UI Development Kit",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/GabeBuckley/uikit.git"
+    },
+    "author": "Gabe Buckley",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/GabeBuckley/uikit/issues"
+    },
+    "homepage": "https://github.com/GabeBuckley/uikit#readme",
+    "devDependencies": {
+        "grunt": "^1.0.3",
+        "grunt-contrib-clean": "^2.0.0",
+        "grunt-contrib-less": "^2.0.0",
+        "grunt-replace": "^1.0.1"
+    }
+}

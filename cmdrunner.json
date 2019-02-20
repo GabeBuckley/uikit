@@ -1,0 +1,102 @@
+[{
+    "label": "Grunty grunt grunt ",
+    "cmd": "grunt",
+    "args" : [],
+    "key" : "Ctrl-Shift-G"
+},{
+    "label": "Git Status ",
+    "cmd": "git status",
+    "args" : [],
+    "key" : "Ctrl-Alt-Shift-S"
+},{
+    "label": "Curl ",
+    "cmd": "curl '$projectDir'",
+    "args" : [],
+    "splitChar": "|",
+    "key" : ""
+}, {
+    "label": "Git Commit All",
+    "cmd": "git commit -a -m '$0'",
+    "args" : ["Informe seu comentário aqui!"],
+    "key" : "Ctrl-Alt-Shift-C"
+}, {
+    "label": "Git Push",
+    "cmd": "git push",
+    "args" : [],
+    "key" : "Ctrl-Alt-Shift-W"
+}, {
+    "label": "Git Pull",
+    "cmd": "git pull",
+    "args" : [],
+    "key" : "Ctrl-Alt-Shift-P"
+}, {
+    "label": "Generate Zip Package",
+    "cmd": "git archive --format zip -o brackets-command-runner.zip master",
+    "args" : [],
+    "key" : "Ctrl-Alt-Shift-Z"
+}, {
+    "label": "Show Current Dir",
+    "cmd": "pwd",
+    "args" : [],
+    "key" : "",
+    "opts": {
+        "defaultPath": "./"
+    }
+}, {
+    "label": "Show Current Dir Selected File",
+    "cmd": "pwd",
+    "args" : [],
+    "key" : "",
+    "opts": {
+        "defaultPath": "$dirOfSelectedFile"
+    }
+}, {
+    "label": "Echo File",
+    "cmd": "cat $selectedFile",
+    "args" : [],
+    "key" : "",
+    "opts": {
+        "defaultPath": "$dirOfSelectedFile"
+    }
+}, {
+    "label": "Infinite Loop",
+    "cmd": "while :; do echo 'Kill me!'; sleep 1; done",
+    "args" : [],
+    "key" : ""
+}, {
+    "label": "Loop Without Console",
+    "cmd": "while :; do echo 'Kill me!'; sleep 2; done",
+    "args" : [],
+    "key" : "",
+    "opts" : {
+        "hiddenConsole": true
+    }
+}, {
+    "label": "Open Firefox",
+    "cmd": "firefox 'http://$0'",
+    "args" : ["www.google.com.br"],
+    "key" : ""
+}, {
+    "label": "Commit And Push",
+    "cmd": "git commit -a -m '$0' && git push",
+    "args" : ["Updates..."],
+    "key" : ""
+}, {
+    "label": "New Commit And Push 2",
+    "cmd": "git commit -a -m '$0' && git push",
+    "args" : ["Updates..."],
+    "key" : ""
+}, {
+    "label": "Run Jboss",
+    "cmd": "~/Develop/jboss-6.1.0.eldoc/bin/run.sh",
+    "args" : [],
+    "key": "",
+    "opts": {
+        "killCmd": "~/Develop/jboss-6.1.0.eldoc/bin/shutdown.sh -S"
+    }
+}, {
+    "label": "Echo With Color",
+    "cmd" : "echo -e \"\\e[31mHello World\\e[0m\"",
+    "args": [],
+    "key": ""
+}]
