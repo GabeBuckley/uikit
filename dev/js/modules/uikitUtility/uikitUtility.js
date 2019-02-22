@@ -1,10 +1,9 @@
 // module "uikitUtility"
 /* eslint-env es6 */
-
-import uikitGUID from "uikitGUID/uikitGUID";
-
-export default class uikitUtility {
+class uikitUtility {
     guid(){
         return new uikitGUID();
     }
 }
+
+module.exports.uikitUtility = uikitUtility;

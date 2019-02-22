@@ -1,0 +1,19 @@
+/**
+ * uikit.less
+ * @file Imports dependencies and compiles to uikit.css
+ * @version 1.0.0
+ * @author Gabe Buckley gb@gabrielbuckley.com
+ *
+ * @copyright Gabe Buckley 2019
+ */
+p {
+  background-color: #eeeeff;
+  color: #1A237E;
+  padding: 15px;
+}
+ul {
+  background-color: #eeeeff;
+}
+li {
+  color: #1A237E;
+}

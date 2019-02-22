@@ -1,7 +1,7 @@
 // module "enums"
 /* eslint-env es6 */
 
-export default class enums {
+class enums {
     
     static get status(){
         return {
@@ -10,3 +10,5 @@ export default class enums {
         };
     }
 }
+
+module.exports.default = enums;

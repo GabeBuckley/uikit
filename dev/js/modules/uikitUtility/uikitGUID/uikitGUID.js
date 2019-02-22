@@ -1,14 +1,11 @@
 // module "uikitGUID"
 /* eslint-env es6 */
-
-import enums from "../../enums/enums";
-
-export default class uikitGUID {
+class uikitGUID {
     
     constructor(){
-        this.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-        this.value = "";
-        this.status = enums.status.UNINITIALISED;
+        this.arrChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        this.strGuid = null;
+        this.blStatus = enums.status.UNINITIALISED;
         this["generate"]();
     }
     
@@ -17,14 +14,16 @@ export default class uikitGUID {
         var strGUID = "";
         var blockArray = [];
         
+        var _self = this;
+        
         var createBlock = function(intLength){
             var charArray = [];
             for(let i = 0; i < intLength; i++){
                 charArray.push(
-                    this.chars.charAt(
+                    _self.arrChars.charAt(
                         Math.floor(
                             Math.random() * 10000
-                        ) % this.chars.length
+                        ) % _self.arrChars.length
                     )
                 );
             }
@@ -38,9 +37,8 @@ export default class uikitGUID {
         }
         
         strGUID = blockArray.join('-');
-        this.value = strGUID;
-        this.status = enums.status.INITIALISED;
-        
+        this.strGuid = strGUID;
+        this.blStatus = enums.status.INITIALISED;
     }
 
     get value(){
@@ -50,5 +48,10 @@ export default class uikitGUID {
     toString(){
         return this.value;
     }
+    
+    get status(){
+        return this.blStatus;
+    }
 }
 
+module.exports.uikitGUID = uikitGUID;
