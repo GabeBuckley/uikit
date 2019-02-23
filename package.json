@@ -21,9 +21,11 @@
         "grunt-contrib-clean": "^2.0.0",
         "grunt-contrib-concat": "^1.0.1",
         "grunt-contrib-less": "^2.0.0",
+        "grunt-file-append": "0.0.7",
         "grunt-replace": "^1.0.1",
         "grunt-shell": "^3.0.1",
-        "mocha": "^6.0.0",
+        "mocha": "^6.0.1",
         "mocha-simple-html-reporter": "^1.1.0"
-    }
+    },
+    "dependencies": {}
 }
