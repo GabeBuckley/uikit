@@ -1,0 +1,1 @@
+start "" test\results\test_results.html 1>null

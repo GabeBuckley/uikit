@@ -1,0 +1,1 @@
+mocha test\test.js --reporter mocha-simple-html-reporter --reporter-options output=test\results\test_results.html
