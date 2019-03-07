@@ -1,3 +1,26 @@
+/**
+ * The UI namespace.
+ * @namespace
+ * @name UI
+ */
+
+/**
+ * Interface for classes that fire and respond to events.
+ *
+ * @interface 
+ * @name UI#EventTarget
+ * @memberof UI
+ */
+
+/**
+ * Attach an event listener to a specific event
+ *
+ * @function
+ * @name UI#EventTarget#addEventListener
+ * @returns undefined
+ * @memberof UI#EventTarget
+ */
+
 import EventMgr from "./EventMgr.js";
 
 const _DevNull = Symbol('DevNull');
@@ -12,14 +35,12 @@ const _type = Symbol('type');
 
 const _onClick = Symbol('onClick');
 
-
 class UIException extends Error {
     constructor(strMessage){
         super(strMessage);        
     }
     
 }
-
 
 class UIElement {
     constructor(objHTMLElement){
@@ -130,7 +151,15 @@ class UIElement {
     }
 }
 
+ /**
+ * @class
+ * @name UI#Alert
+ * @memberof UI
 
+ * @implements UI#EventTarget
+ * @param {HTMLElement} objElement
+ * @throws {UIException} UIException: The first parameter must be a valid HTMLElement
+ */
 
 class UIAlert extends UIElement {
     constructor(objHTMLElement){
@@ -145,55 +174,18 @@ class UIAlert extends UIElement {
             this[_type] = 'none';
         }
     }
-}
-
-class UIButton extends UIElement {
-    constructor(objHTMLElement){
-        super(objHTMLElement); 
-        
-        this.addClass('ui-button');
-        
-        // Pass the click event back up to the handler
-        this[_physical].addEventListener('click', this[_onClick].bind(this));
-        
-    }
-    
-    [_onClick](objEvent){
-        this.dispatchEvent(objEvent);
-    }
-}
-
-/**
- * The UI namespace.
- * @namespace UI
- */
-
-const UIObject = {
-    /**
-     * @name UI.Alert
-     * @memberof UI
-
-     * @class
-     * @implements EventTarget
-     * @param {HTMLElement} objElement
-     * @throws {UIException} UIException: The first parameter must be a valid HTMLElement
-     */
-    Alert: UIAlert,
     
     /**
-     * @name UI.Button
-     * @class
-     * @implements EventTarget
-     * @param {HTMLElement} objElement
-     * @throws {UIException} UIException: The first parameter must be a valid HTMLElement
+     * @method 
+     * @name UI#Alert#fooBar
+     * @returns {boolean} A boolean
+     * @memberof UI#Alert
      */
-    Button: UIButton
-};
 
-window[_DevNull] = {
     /**
-     * @name UI.Alert.text
-     * @member {string} UI.Alert.text The text displayed in the alert message
+     * 
+     * @member
+     * @name UI#Alert#text
      * @fires UIElementTextChange
      * @example
 // returns 'Warning, file not found.'
@@ -209,13 +201,12 @@ window[_DevNull] = {
   var myElement = document.createElement('div');
   var myAlert = new uikit.UI.Alert(myElement); 
   myAlert.text = 'All Good';
-     * @memberof UI.Alert
+     * @memberof UI#Alert
      */
-    "UI.Alert.text": null,
     
     /**
-     * @name UI.Alert.visible
-     * @member {boolean} UI.Alert.visible The visibility status of the alert message
+     * @member
+     * @name UI#Alert#visible
      * @fires UIElementShow
      * @fires UIElementHide
      * @example
@@ -230,13 +221,38 @@ return myAlert.visible;
 var myElement = document.createElement('div');
 var myAlert = new uikit.UI.Alert(myElement); 
 myAlert.visible = false;
-     * @memberof UI.Alert
+     * @memberof UI#Alert
      */
-    "UI.Alert.visible": null,
+}
+
+/**
+ * @class
+ * @name UI#Button
+ * @memberof UI
+
+ * @implements UI#EventTarget
+ * @param {HTMLElement} objElement
+ * @throws {UIException} UIException: The first parameter must be a valid HTMLElement
+ */
+
+class UIButton extends UIElement {
+    constructor(objHTMLElement){
+        super(objHTMLElement); 
+        
+        this.addClass('ui-button');
+        
+        // Pass the click event back up to the handler
+        this[_physical].addEventListener('click', this[_onClick].bind(this));
+        
+    }
+    
+    [_onClick](objEvent){
+        this.dispatchEvent(objEvent);
+    }
     
     /**
-     * @name UI.Button.text
-     * @member {string} UI.Button.text The text displayed in the button
+     * @member
+     * @name UI#Button#text
      * @fires UIElementTextChange
      * @example
 // returns 'Click Me!'
@@ -250,13 +266,13 @@ return myButton.text;
 var myElement = document.createElement('span');
 var myButton = new uikit.UI.Button(myElement); 
 myButton.text = 'OK';
-     * @memberof UI.Button
+     * @memberof UI#Button
      */
-    "UI.Button.text": null,
     
     /**
-     * @name UI.Button.visible
-     * @member {boolean} UI.Button.visible The visibility status of the Button message
+     * @member
+     * @name UI#Button#visible
+     
      * @fires UIElementShow
      * @fires UIElementHide
      * @example
@@ -271,9 +287,14 @@ return myButton.visible;
 var myElement = document.createElement('div');
 var myButton = new uikit.UI.Button(myElement); 
 myButton.visible = false;
-     * @memberof UI.Button
+     * @memberof UI#Button
      */
-    "UI.Button.visible": null,
 }
+
+
+const UIObject = {
+    Alert: UIAlert,
+    Button: UIButton
+};
 
 export default UIObject;
