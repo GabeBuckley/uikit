@@ -1,0 +1,1 @@
+jsdoc dev\js\classes\UI.js -d dev\out -t node_modules/foodoc/template

@@ -8,4 +8,3 @@ uikitUtility = require(PATH_TO_DEV_DIR + "/js/modules/uikitUtility/uikitUtility.
 
 
 require(PATH_TO_DEV_DIR + "/js/modules/uikitUtility/uikitUtility_test.js");
-require(PATH_TO_DEV_DIR + "/js/modules/uikitUtility/uikitGUID/uikitGUID_test.js");

@@ -24,8 +24,11 @@
         "grunt-file-append": "0.0.7",
         "grunt-replace": "^1.0.1",
         "grunt-shell": "^3.0.1",
+        "jsdoc": "^3.5.5",
         "mocha": "^6.0.1",
         "mocha-simple-html-reporter": "^1.1.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "foodoc": "0.0.9"
+    }
 }
