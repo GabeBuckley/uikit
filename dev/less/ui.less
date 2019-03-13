@@ -1,22 +1,119 @@
-.ui-element {
-    
+* {
+    fill: currentColor;
 }
 
 .ui-alert {
+    display: block;
     width: 80%;
-    max-width: 50rem;
-    border-radius: 0.5rem;
-    height: 3rem;
+    max-width: 100rem;
+    border-radius: @border-radius-large;
     font-size: 1rem;
-    border: 2px solid #666;
-    background: #ccc;
-    color: #333;
+    border: 0.075rem solid #666;
+    background: @background-color;
+    color: @text-color;
     padding: 1rem;
     margin: 1rem;
-    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.5);
-    
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: @box-shadow;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
 }
 
 .ui-alert.ui-warning {
-    
+    border-color: @ui-red;
+    background-color: lighten(@background-color, 10%);
+    color: @ui-red;
+}
+
+.ui-alert.ui-info {
+    border-color: @ui-blue;
+    background-color: lighten(@background-color, 10%);
+    color: @ui-blue;
+}
+
+.ui-alert.ui-success {
+    border-color: @ui-green;
+    background-color: lighten(@background-color, 10%);
+    color: @ui-green;
+}
+
+.ui-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    text-align: center;
+    cursor: pointer;
+    border: 0.125rem solid #666;
+    border-radius: 0.5rem;
+    background-color: #ccc;
+    color: #333;
+    box-shadow: @box-shadow;
+    transition: all 0.1s;
+}
+
+.ui-button:hover {
+    background-color: #ddd;
+    box-shadow: @box-shadow-up;
+}
+
+.ui-button:active {
+    background-color: #bbb;
+    box-shadow: @box-shadow-down;
+}
+
+.ui-button.ui-warning {
+    background-color: @ui-red;
+    border-color: @ui-red;
+    color: #fff;
+}
+
+.ui-icon-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.ui-icon-button:hover {
+    box-shadow: 0.125rem 0.125rem 0.12rem 0.12rem rgba(0, 0, 0, 0.375);
+}
+
+.ui-button:active {
+    box-shadow: 0.075rem 0.075rem 0.075rem 0.075rem rgba(0, 0, 0, 0.675);
+}
+
+.ui-icon-button svg {
+    width: auto;
+    height: 100%;
+}
+
+/* ANIMATIONS */
+
+.fade_out {
+    animation: fade_out 0.375s ease-in 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fade_out {
+    0% {
+        opacity: 1;
+    }
+
+    99% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+        display: none;
+    }
 }

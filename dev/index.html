@@ -1,79 +1,30 @@
 <html>
     <head>
-    <style>
+        <link type="text/css" rel="stylesheet/less" href="less/uikit.less">
+        <script type="module" src="js/uikit.js" charset="utf-8"></script>
         
-        /*
-        
-@ui-blue: #125E8A;
-
-@ui-dark-grey: #1F363D; 
-
-@ui-green: #00A896;
-
-@ui-mid-grey: #798086; 
-
-@ui-orange: #DE6449;
-
-@ui-purple: #72195A;
-
-@ui-red: #C83854;
-        */
-        
-        *[data-visible="false"] {
-            display: none;
-        }
-        
-        .ui-alert {
-            width: 80%;
-            max-width: 100rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            border: 0.125rem solid #666;
-            background: #ccc;
-            color: #333;
-            padding: 1rem;
-            margin: 1rem;
-            box-shadow: 0.125rem 0.125rem 0.2rem 0.2rem rgba(0,0,0,0.5);
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .ui-alert.ui-warning {
-            border-color: #C83854;
-            background-color: #F0C8D0;
-            color: #C83854;
-        }
-        
-        .ui-button {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            margin: 0.25rem;
-            text-align: center;
-            cursor: pointer;
-            border: 0.125rem solid #666;
-            border-radius: 0.5rem;
-            background: #ccc;
-            color: #333;
-            box-shadow: 0.125rem 0.125rem 0.125rem 0.125rem rgba(0,0,0,0.5);
-            transition: all 0.1s;
-        }
-        
-        .ui-button:hover {
-            background: #ddd;
-            box-shadow: 0.25rem 0.25rem 0.2rem 0.2rem rgba(0,0,0,0.375);
-        }
-        
-        .ui-button:active {
-            background: #bbb;
-            box-shadow: 0.125rem 0.125rem 0.1rem 0.1rem rgba(0,0,0,0.675);
-        }
-        
-        
-    </style>
-    <script type="module" src="js/uikit.js" charset="utf-8"></script>
     </head>
     <body>
         <h1>uiKitDev</h1>
-        <div class="bite_the_wax" id="mooop" data-ui="true" data-element="uikit_panel" data-options="{text:'this is a test',type:'warning'}"></div><button>dooooo</button>
+        
+        <div id="test_alert" 
+             data-ui="true" 
+             data-options="
+                {
+                    ui:     'Alert',
+                    text:   'this is a test',
+                    type:   'success'
+                }"
+        ></div>
+        <div id="test_alert_2" 
+             data-ui="true" 
+             data-options="
+                {
+                    ui:     'Alert',
+                    text:   'this is another test',
+                    type:   'info'
+                }"
+        ></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
     </body>
 </html>

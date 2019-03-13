@@ -1,5 +1,10 @@
 module.exports = function (grunt) {
 
+    const fs = require('fs');
+    
+    const iconFolder = './dev/svg/';
+    const lessFolder = './dev/less/';
+        
 	var stuff = {
 		buildDate: new Date().toUTCString()
 	}
@@ -113,6 +118,7 @@ module.exports = function (grunt) {
 
 
 
+
 	/*******************************************
 	 * Build and release
 	 */
@@ -122,4 +128,26 @@ module.exports = function (grunt) {
 		grunt.task.run('file_append:banner');
 		grunt.task.run('clean:dist');
 	});
+    
+    grunt.registerTask('compile_icons', "", function(){
+        var lessText = "/** DATE STAMP: " + new Date( ).toUTCString() + " **/ \n\n";
+        
+        fs.readdirSync(iconFolder).forEach(file => {
+            var svgFile = fs.readFileSync(iconFolder + file);
+            var svgBuff = Buffer.from(svgFile);
+            var svgB64 = svgBuff.toString('base64');
+            var lessSVG = [
+                 ".icon-" + file.replace('.svg','') + " {"
+                ,"  background-image: url('data:image/svg+xml;utf8,"
+                ,svgB64 + "');"
+                ,"}\n"
+            ].join('\n');
+            
+            lessText = [lessText, lessSVG].join('\n');
+        });
+        
+        fs.writeFileSync(iconFolder + 'icons.less', lessText);
+        
+        console.log('compile_icons ended');
+    });
 };
