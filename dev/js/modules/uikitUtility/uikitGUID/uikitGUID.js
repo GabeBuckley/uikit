@@ -4,7 +4,7 @@
 import enums from "../../enums/enums.js";
 
 
-export default class uikitGUID {
+class uikitGUID {
 
 	constructor() {
 		this.arrChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
@@ -58,6 +58,4 @@ export default class uikitGUID {
 	}
 }
 
-if (typeof module != 'undefined') {
-	module.exports.uikitGUID = uikitGUID;
-}
+export default uikitGUID;

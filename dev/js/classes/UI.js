@@ -22,44 +22,37 @@
  */
 
 import EventMgr from "./EventMgr.js";
+import Util from "../modules/uikitUtility/uikitUtility.js";
 
 const _id = Symbol('id');
 const _options = Symbol('options');
-const _physical = Symbol('physical');
 const _text = Symbol('text');
 const _visible = Symbol('visible');
 const _type = Symbol('type');
-
+const _physical = Symbol('physical');
+const _shadow = Symbol('shadow');
+const _data = Symbol('_data');
 
 const _events = Symbol('events');
 const _onClick = Symbol('onClick');
 
-
+const _element = Symbol('_element');
 const _elements = Symbol('elements');
 
 
 const _setText = Symbol('setText');
 const _implements = Symbol('implements');
 const _getUIElements = Symbol('getUIElements');
+const _shadowCopy = Symbol('shadowCopy');
+const _harvestOptions = Symbol('harvestOptions');
+const _handleOptionChange = Symbol('_handleOptionChange');
+const _getEventInfo = Symbol('_getEventInfo');
 
 
 const UI_Icons = {
     times: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>'
 }
 
-const UITypes = {
-    types: [
-        'warning'
-    ],
-    isType: function(strType){
-        for(var i = 0; i < this.types.length; i++){
-            if(this.types[i] == strType){
-                return true;
-            }
-        }
-        return false;
-    }
-};
 
 // Utility Classes
 class UIException extends Error {
@@ -69,38 +62,53 @@ class UIException extends Error {
     
 }
 
+class UIEvent extends Event {
+    constructor(strEventType, objElementInfo){
+        super(strEventType);
+        this[_element] = objElementInfo;
+    }
+    
+    get element(){
+        return this[_element];
+    }
+}
+
 class UIElement {
-    constructor(objHTMLElement){
+    constructor(objHTMLElement, objOptions){
         this[_events] = new EventMgr(this);
-        
+        this[_data] = {
+            lastPropertyChange: ''
+        };
+         
         this[_physical] = objHTMLElement;
                 
-        this[_options] = {};
+        this[_options] = {
+            default: {
+                id:         'id_' + Util.guid().value,
+                text:       '',
+                type:       '',
+                visible:    true,
+                widget:     'Panel'
+            },
+            attributes: {},
+            supplied: objOptions,
+            final: {}
+        };
         
         if( this[_physical] != null 
             && typeof this[_physical] == 'object' 
             && typeof this[_physical].tagName == "string"){
-
+            
             this[_id] = this[_physical].id;
             
-            if(this[_physical].hasAttribute('data-options')){
-                try{
-                    this[_options] = eval('this[_options]=' + this[_physical].getAttribute('data-options'));
-                } catch(e){
-                    alert(e);
-                }
-            }
-
-            if(typeof this[_options].text != "undefined"){
-                this[_text] = this[_options].text;
-            } else {
-                if(this[_physical].innerHTML){
-                    this.text = this[_physical].innerHTML;
-                }
-                else {
-                    this[_text] = '';
-                }
-            }
+            this[_shadow] = document.createElement('article');
+            this[_shadowCopy]();
+            
+            this[_harvestOptions]();
+            
+            
+            
+            /**
             
             if(typeof this[_options].type != "undefined"){
                 this[_type] = this[_options].type;
@@ -120,6 +128,15 @@ class UIElement {
                     this[_visible] = false;
                 }
             }
+            **/
+            
+            this.addEventListener('UIOptionChange', this[_handleOptionChange].bind(this));
+            
+            for(var opt in this[_options].final){
+                if(this[_options].final.hasOwnProperty(opt)){
+                    this.setOption(opt, this.getOption(opt));
+                }
+            }
             
             this[_implements] = ['UIElement', 'EventTarget'];
         }
@@ -129,44 +146,19 @@ class UIElement {
     }
     
     get type(){
-        return this[_type];
+        return this.getOption('type');
     }
     
     set type(strType){
-        if(UITypes.isType(strType)){
-            for(var i = 0; i < UITypes.types.length; i++){
-                this.removeClass('ui-' + UITypes.types[i]);
-            }
-            this[_type] = strType;
-            this.addClass('ui-' + strType);
-        }
+        this.setOption('type',strType);
     }
     
     get visible(){
-        return this[_visible];
+        return this.getOption('visible');
     }
     
     set visible(blVisible){
-        this[_visible] = blVisible;
-        if(this[_physical] != null){
-            this[_physical].setAttribute('data-visible',this[_visible]);
-        }
-        if(this[_visible]){
-            this[_events].event('UIElementShow').fire();
-        }
-        else{
-            this[_events].event('UIElementHide').fire();
-        }
-    }
-    
-    get text(){
-        return this[_text];
-    }
-    
-    set text(strText){
-        this[_text] = strText;
-        this[_setText](strText);
-        this[_events].event('UIElementTextChange').fire();
+        this.setOption('visible',blVisible);
     }
     
     get classList(){
@@ -178,13 +170,35 @@ class UIElement {
     }
     
     get id(){
-        return this[_id];
+        return this.getOption('id');
     }
     
-    [_setText](strText){
-        this[_physical].innerHTML = this[_text];
+    hasOption(strOpt){
+        for(var prop in this[_options].final){
+            if(this[_options].final.hasOwnProperty(prop)){
+                if(prop.toLowerCase() == strOpt.toLowerCase()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
+    getOption(strOpt){
+        if(this.hasOption(strOpt)){
+            return this[_options].final[strOpt];
+        }
+        else {
+            return null;
+        }
+    }
+    
+    setOption(strOpt, objValue){
+        this[_options].final[strOpt] = objValue;
+        this[_data].lastPropertyChange = strOpt;
+        this.dispatchEvent(new UIEvent('UIOptionChange', this[_getEventInfo]('UIOptionChange')));
+    }
+        
     hasClass(strClass){
         return this[_physical].classList.contains(strClass);
     }
@@ -224,6 +238,131 @@ class UIElement {
         }
     }
     
+    [_getEventInfo](strType){
+        var infoBundle = {
+            widget: this[_options].final.widget,
+            id: this[_id],
+        };
+        switch(strType.toLowerCase()){
+            case 'uioptionchange' : {
+                infoBundle.option = {
+                    label: this[_data].lastPropertyChange,
+                    value: this[_options].final[this[_data].lastPropertyChange]
+                };
+                
+                break;
+            }
+            default : {
+                break;
+            }
+        }
+        return infoBundle;
+    }
+    
+    [_setText](strText){
+        this[_physical].innerHTML = this[_text];
+    }
+    
+    [_shadowCopy](){
+        while(this[_shadow].childNodes.length > 0){
+            this[_shadow].removeChild(thisthis[_shadow].childNodes[0]);
+        }
+        for(var i = 0; i < this[_physical].childNodes.length; i++){
+            this[_shadow].appendChild(this[_physical].childNodes[i]);
+        }
+    }
+    
+    [_handleOptionChange](evt){
+        switch(evt.element.option.label){
+            case 'type' : {
+                for(var strType in UIDEFINE.type){
+                    this[_physical].classList.remove(UIDEFINE.type[strType]);
+                }
+                
+                this[_physical].classList.add('ui-' + this.getOption('type'));
+            }
+                
+            case 'visible' : {
+                var isVisible = this.getOption('visible');
+                this[_physical].setAttribute('data-visible',isVisible);
+                if(isVisible){
+                    this.dispatchEvent(new UIEvent('UIElementShow', this[_getEventInfo]('UIElementShow')));
+                }
+                else{
+                    this.dispatchEvent(new UIEvent('UIElementHide', this[_getEventInfo]('UIElementHide')));
+                }
+            }
+                
+            default :{
+                
+            }
+        }
+    }
+    
+    [_harvestOptions](){
+        
+        let classMap = UIDEFINE.class;
+        
+        let tagMap = UIDEFINE.tag;
+        
+        let attMap = UIDEFINE.attribute;
+        
+        var harvestFromAttributes = function(){
+            if(this[_physical].hasAttribute('id')){
+                this[_options].attributes.id = this[_physical].getAttribute('id');
+            }
+            for(var attr in attMap){
+                if(attMap.hasOwnProperty(attr)){
+                    if(this[_physical].hasAttribute(attMap[attr])){
+                        this[_options].attributes.widget = attMap[attr];
+                    }
+                }
+            }
+        }.bind(this);
+        
+        var harvestFromTagName = function(){
+            var strTag = this[_physical].tagName.toLowerCase();
+            if(tagMap.hasOwnProperty(strTag)){
+                this[_options].attributes.widget = tagMap[strTag];
+            }
+        }.bind(this);
+        
+        var consolidate = function(){
+            //debugger;
+            var objFinal = {};
+            if(this[_options].default != null){
+                for(var prop in this[_options].default){
+                    if(this[_options].default.hasOwnProperty(prop)){
+                        objFinal[prop] = this[_options].default[prop];
+                    }
+                }
+            }
+            
+            if(this[_options].supplied != null){
+                for(var prop in this[_options].supplied){
+                    if(this[_options].supplied.hasOwnProperty(prop)){
+                        objFinal[prop] = this[_options].supplied[prop];
+                    }
+                }
+            }
+            
+            if(this[_options].attributes != null){
+                for(var prop in this[_options].attributes){
+                    if(this[_options].attributes.hasOwnProperty(prop)){
+                        objFinal[prop] = this[_options].attributes[prop];
+                    }
+                }
+            }
+            
+            this[_options].final = objFinal;
+        }.bind(this);
+        
+        // Sequence is important
+        harvestFromAttributes();
+        harvestFromTagName();
+        consolidate( );
+        
+    }
 }
 
 class UIElementCollection {
@@ -278,11 +417,12 @@ class UIElementCollection {
     
     [_getUIElements](){
         let uiElements = document.querySelectorAll('*[data-ui="true"]');
+                
+        let classMap = UIDEFINE.class;
         
-        let classMap = {
-            Alert: UIAlert,
-            Button: UIButton
-        };
+        let tagMap = UIDEFINE.tag;
+        
+        let attMap = UIDEFINE.attribute;
         
         this[_elements] = [];
         
@@ -291,14 +431,18 @@ class UIElementCollection {
             if(el.hasAttribute('data-options')){
                 var strOptions = el.getAttribute('data-options');
                 var options = {
-                    ui: null
+                    widget: null
                 };
-                eval("options = " + strOptions + ";");
-                if(options.ui == null){
-                    options.ui = 'Button';
+                try {
+                    eval("options = " + strOptions + ";");
+                } catch(e){
+                    console.log(e);
+                }
+                if(options.widget == null){
+                    options.widget = 'Panel';
                 }
                 
-                var uiEl = new classMap[options.ui](el);
+                var uiEl = new classMap[options.widget](el,options);
                 this.add(uiEl);
             }
         }
@@ -401,8 +545,8 @@ myAlert.visible = false;
 const _closeButton = Symbol('closeButton');
 const _inner = Symbol('inner');
 class UIAlert extends UIElement {
-    constructor(objHTMLElement){
-        super(objHTMLElement); 
+    constructor(objHTMLElement, objOptions){
+        super(objHTMLElement, objOptions);
         
         this.addClass('ui-alert');
         
@@ -412,6 +556,8 @@ class UIAlert extends UIElement {
         this[_physical].innerHTML = '';
         this[_physical].appendChild(this[_inner]);
         
+        this.setOption('text', this.getOption('text'));
+        
         this[_closeButton] = new UIIconButton(document.createElement('a'));
         this[_closeButton].icon = 'times';
         this[_closeButton].type = 'warning';
@@ -419,6 +565,21 @@ class UIAlert extends UIElement {
         this[_physical].appendChild(this[_closeButton][_physical]);
         
         this[_closeButton].addEventListener('click', this.close.bind(this));
+    }
+    
+    [_handleOptionChange](evt){
+        super[_handleOptionChange](evt);
+        switch(evt.element.option.label){
+            case 'text' : {
+                if(this[_inner]){
+                    this[_inner].innerHTML = this.getOption('text');
+                }
+            }
+
+            default :{
+
+            }
+        }
     }
     
     close( ){
@@ -430,7 +591,6 @@ class UIAlert extends UIElement {
         setTimeout(final, 500);
         this.addClass('fade_out');
     }
-    
 }
 
 
@@ -486,8 +646,8 @@ myButton.visible = false;
      */
 };
 class UIButton extends UIElement {
-    constructor(objHTMLElement){
-        super(objHTMLElement); 
+    constructor(objHTMLElement, objOptions){
+        super(objHTMLElement, objOptions); 
         
         this.addClass('ui-button');
         
@@ -499,6 +659,18 @@ class UIButton extends UIElement {
     [_onClick](objEvent){
         this.dispatchEvent(objEvent);
     }
+    
+    [_handleOptionChange](evt){
+        switch(evt.element.option.label){
+            case 'text' : {
+                this[_physical].innerHTML = this.getOption('text');
+            }
+                
+            default :{
+                
+            }
+        }
+    }
 }
 
 
@@ -506,8 +678,8 @@ const CLASS_ICON_BUTTON = { };
 const _icon = Symbol('icon');
 const _clear = Symbol('clear');
 class UIIconButton extends UIButton {
-    constructor(objHTMLElement){
-        super(objHTMLElement); 
+    constructor(objHTMLElement, objOptions){
+        super(objHTMLElement, objOptions); 
         this.addClass('ui-icon-button');
         this[_icon] = 'trash';
         this.addClass('icon-' + this[_icon])
@@ -533,8 +705,64 @@ class UIIconButton extends UIButton {
             }
         }
     }
+    
+    [_handleOptionChange](evt){
+        super[_handleOptionChange](evt);
+        switch(evt.element.option.label){
+            case 'text' : {
+                this[_physical].innerHTML = this.getOption('text');
+            }
+                
+            default :{
+                
+            }
+        }
+    }
 }
 
+class UIPanel extends UIElement {
+    constructor(objHTMLElement, objOptions){
+        super(objHTMLElement, objOptions); 
+        this.addClass('ui-panel');
+    }
+    
+    [_handleOptionChange](evt){
+        super[_handleOptionChange](evt);
+        switch(evt.element.option.label){
+            case 'text' : {
+                this[_physical].innerHTML = this.getOption('text');
+            }
+                
+            default :{
+                
+            }
+        }
+    }
+}
+
+
+const UIDEFINE = {
+    class: {
+        Alert: UIAlert,
+        Button: UIButton,
+        Panel: UIPanel
+    },
+    tag: {
+        "ui-alert": UIAlert,
+        "ui-button": UIButton,
+        "ui-panel": UIPanel
+    },
+    attribute: {
+        "data-alert": UIAlert,
+        "data-button": UIButton,
+        "data-panel": UIPanel
+    },
+    type: {
+        warning: 'ui-warning',
+        info: 'ui-info',
+        success: 'ui-success'
+    }
+};
 
 const UIObject = {
     Alert: UIAlert,

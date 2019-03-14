@@ -1,7 +1,7 @@
 // module "uikitHTTPRequestHeader"
 /* eslint-env es6 */
 
-export default class uikitHTTPRequestHeader {
+class uikitHTTPRequestHeader {
 
 	constructor(strHeader, strValue) {
 		this._header = strHeader;
@@ -26,6 +26,5 @@ export default class uikitHTTPRequestHeader {
 
 }
 
-if (typeof module != 'undefined') {
-	module.exports.uikitHTTPRequestHeader = uikitHTTPRequestHeader;
-}
+export default uikitHTTPRequestHeader;
+

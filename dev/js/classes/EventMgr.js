@@ -1,7 +1,7 @@
 // module "EventOwner"
 /* eslint-env es6 */
 
-export default class EventMgr {
+class EventMgr {
     
     constructor(objParent){
         this._parent = objParent;
@@ -64,6 +64,4 @@ export default class EventMgr {
     }
 }
 
-if (typeof module != 'undefined') {
-	module.exports.EventMgr = EventMgr;
-}
+export default EventMgr;

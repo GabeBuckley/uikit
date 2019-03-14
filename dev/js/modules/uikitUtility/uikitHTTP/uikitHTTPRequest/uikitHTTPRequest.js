@@ -3,7 +3,7 @@
 
 import uikitHTTPRequestHeader from "./uikitHTTPRequestHeader/uikitHTTPRequestHeader.js";
 
-export default class uikitHTTPRequest {
+class uikitHTTPRequest {
 
 	constructor(strMethod, strURL, fnCallback) {
 		this._request = new XMLHttpRequest();
@@ -59,6 +59,5 @@ export default class uikitHTTPRequest {
 	}
 }
 
-if (typeof module != 'undefined') {
-	module.exports.uikitHTTPRequest = uikitHTTPRequest;
-}
+export default uikitHTTPRequest;
+

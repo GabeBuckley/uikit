@@ -5,21 +5,19 @@ import uikitGUID from "./uikitGUID/uikitGUID.js";
 import uikitHTTP from "./uikitHTTP/uikitHTTP.js";
 
 
-export default class uikitUtility {
+class uikitUtility {
 	constructor() {
 
 	}
 
-	guid() {
+	static guid() {
 		return new uikitGUID();
 	}
 
-	httpRequest(strMethod, strURL, fnCallback) {
+	static httpRequest(strMethod, strURL, fnCallback) {
 		return uikitHTTP.request(strMethod, strURL, fnCallback);
 	}
 
 }
 
-if (typeof module != 'undefined') {
-	module.exports.uikitUtility = uikitUtility;
-}
+export default uikitUtility;

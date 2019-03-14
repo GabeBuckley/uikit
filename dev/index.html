@@ -6,12 +6,28 @@
     </head>
     <body>
         <h1>uiKitDev</h1>
+        <div id="test_panel"
+             data-ui="true"
+             data-options="{
+                    widget: 'Panel',
+                    text:   'Panel'
+                }"
+        >
         
+            <a  id="panel_button" 
+                data-ui="true" 
+                data-options="
+                    {
+                        widget: 'Button'
+                    }"
+            ></a>
+        
+        </div>
         <div id="test_alert" 
              data-ui="true" 
              data-options="
                 {
-                    ui:     'Alert',
+                    widget: 'Alert',
                     text:   'Alert'
                 }"
         ></div>
@@ -19,7 +35,7 @@
              data-ui="true" 
              data-options="
                 {
-                    ui:     'Alert',
+                    widget: 'Alert',
                     text:   'Alert.success',
                     type:   'success'
                 }"
@@ -28,7 +44,7 @@
              data-ui="true" 
              data-options="
                 {
-                    ui:     'Alert',
+                    widget: 'Alert',
                     text:   'Alert.warning',
                     type:   'warning'
                 }"
@@ -37,7 +53,7 @@
              data-ui="true" 
              data-options="
                 {
-                    ui:     'Alert',
+                    widget: 'Alert',
                     text:   'Alert.info',
                     type:   'info'
                 }"
@@ -46,7 +62,7 @@
             data-ui="true" 
             data-options="
                 {
-                    ui:     'Button',
+                    widget: 'Button',
                     text:   'Button',
                 }"
         ></a>
@@ -54,7 +70,7 @@
             data-ui="true" 
             data-options="
                 {
-                    ui:     'Button',
+                    widget: 'Button',
                     text:   'Button.success',
                     type:   'success'
                 }"
@@ -63,7 +79,7 @@
             data-ui="true" 
             data-options="
                 {
-                    ui:     'Button',
+                    widget: 'Button',
                     text:   'Button.warning',
                     type:   'warning'
                 }"
@@ -72,7 +88,7 @@
             data-ui="true" 
             data-options="
                 {
-                    ui:     'Button',
+                    widget: 'Button',
                     text:   'Button.info',
                     type:   'info'
                 }"
